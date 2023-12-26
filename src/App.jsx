@@ -9,24 +9,27 @@ function App() {
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
+        <a href="/" target="_blank" style={{ display: "none" }}>
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
-        <a href="https://react.dev" target="_blank">
+        <a href="/" target="_self">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>Hello, Ruhii </h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button onClick={() => setCount((count) => count + 1)} style={{ backgroundColor: "#4478" }}>
+          Click to increase love
         </button>
         <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
+          {
+            // render same number of heart as count
+            Array(count + 1).join('💖')
+          }
         </p>
       </div>
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        Let's promise to be best friends forever. &lt;3<br />
       </p>
     </>
   )
