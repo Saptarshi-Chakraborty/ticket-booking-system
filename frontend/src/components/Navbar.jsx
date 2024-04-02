@@ -33,6 +33,21 @@ const Navbar = () => {
                                 <Link className="nav-link active" aria-current="page" to="/unreserved-ticket">Unreserved Ticket</Link>
                             </li>
 
+                            <li className="nav-item">
+                                <Link className="nav-link active" aria-current="page" to="/reserved-ticket">Reserved Ticket</Link>
+                            </li>
+
+                            <li className="nav-item dropdown">
+                                <a className="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin
+                                </a>
+                                <ul className="dropdown-menu">
+                                    <li><Link className="dropdown-item" to="/admin/manage-stations">Stations</Link></li>
+                                    <li><hr className="dropdown-divider" /></li>
+                                    <li><a className="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
+                            </li>
+
                             {/* Accounts Section in Menu */}
                             <li className="nav-item">
                                 <Link className=" btn btn-primary" to="/login">Login</Link>

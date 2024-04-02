@@ -1,32 +1,43 @@
 "use client";
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.min.css';
 import Navbar from '../components/Navbar'
 import { ALL_STATIONS } from '../../public/data/allStations'
 import TicketCard from '../components/TicketCard';
-import QRCode from 'qrcode'
+import { addNewTicket } from '../utils/localstorage';
+import CONSTANTS from '../../CONSTANTS';
+import NewRegularTicketCard from '../components/NewTicketCard';
 
 
 const UnreservedTicket = () => {
     // ---- State Variables ---- //
     const [ticket, setTicket] = useState({ source: null, destination: null, ticketData: null, encryptedTicketData: null, noOfPassenger: 1 })
     const [allStations, setAllStations] = useState([])
+    const [showTicketCard, setShowTicketCard] = useState(false)
+
+    // Ref variables
+    const sourceInputRef = useRef(null)
+    const destinationInputRef = useRef(null)
+
 
 
     // ---- Custom Functions ---- //
 
     function getAllStations() {
         if (allStations.length > 0) return;
-        const URL = `${window.location.protocol}//${window.location.host}/data/ALL_STATIONS.json`
+        // const URL = `${window.location.protocol}//${window.location.host}/data/ALL_STATIONS.json`
+        const URL = `${CONSTANTS.API.BASE_URL}${CONSTANTS.API.getAllStations}`
         console.log(URL)
 
-        fetch(URL).then(res => res.json()).then((data) => {
-            const jsonData = JSON.stringify(data)
+        fetch(URL).then(res => res.json()).then((_rawData) => {
+            const jsonData = JSON.stringify(_rawData)
             const parsedData = JSON.parse(jsonData);
 
-            setAllStations(data)
+            setAllStations(parsedData.data)
 
-            console.log(jsonData)
+            console.log(parsedData.data)
         }).then(() => {
             console.log(allStations)
         })
@@ -61,47 +72,69 @@ const UnreservedTicket = () => {
     }
 
 
-    function bookTicket() {
+    async function bookTicket() {
         console.log("Booking ticket...")
         if (!ticket.source || !ticket.destination) return;
-
         console.log(ticket);
 
 
         if (ticket.source == ticket.destination) {
-            alert("Source and Destination stations can't be same")
+            toast.error("Source and Destination stations can't be same")
             return;
         }
 
         const sourceStation = allStations.filter((item) => (item.code == ticket.source))[0];
         const destinationStation = allStations.filter((item) => (item.code == ticket.destination))[0];
 
-        const bookingTime = new Date();
-        const bookingTimestamp = bookingTime.getTime();
-
-        const expiryTimestamp = bookingTimestamp + (1000 * 60 * 60 * 24) // ms * s * h * x
-        const expiryTime = new Date(expiryTimestamp)
-
         const ticketData = {
-            source: sourceStation,
-            destination: destinationStation,
+            sourceStationName: sourceStation.name,
+            sourceStationCode: sourceStation.code,
+            destinationStationName: destinationStation.name,
+            destinationStationCode: destinationStation.code,
             numberOfPassenger: ticket.noOfPassenger,
-            bookingTimestamp,
-            expiryTimestamp,
-            ticketType: "Regular/Unreserved"
+            userId: null,
         };
 
-        const jsonTicketData = JSON.stringify(ticketData);
-        console.log(ticketData)
 
-        setTicket((oldData) => {
+        const API = `${CONSTANTS.API.BASE_URL}${CONSTANTS.API.createRegularTicket}`;
+        const params = { body: JSON.stringify(ticketData), method: 'POST', headers: { 'Content-Type': 'application/json' } };
+
+        try {
+            const response = await fetch(API, params).then(res => res.json())
+
+            if (response.status == "error") {
+                toast.error(response.msg)
+                return;
+            }
+
+            toast.success("Ticket Booked Successfully")
+            console.log(response);
+
+            setTicket((oldData) => {
+                return {
+                    ...oldData,
+                    ticketData: ticketData,
+                    encryptedTicketData: response.data
+                }
+            });
+
+            resetFields();
+        } catch (error) {
+            console.error(error)
+            toast.error("Failed to book ticket")
+        }
+
+    }
+
+    function resetFields() {
+        sourceInputRef.current.value = null
+        destinationInputRef.current.value = null;
+        setTicket((oldValues) => {
             return {
-                ...oldData,
-                ticketData: ticketData,
-                encryptedTicketData: jsonTicketData
+                ...oldValues,
+                noOfPassenger: 1
             }
         })
-
     }
 
 
@@ -109,7 +142,8 @@ const UnreservedTicket = () => {
 
 
     useEffect(() => {
-        setAllStations(ALL_STATIONS)
+        // setAllStations(ALL_STATIONS)
+        getAllStations();
     }, []);
 
 
@@ -117,6 +151,8 @@ const UnreservedTicket = () => {
 
     return (
         <>
+            <ToastContainer position='top-left' theme="dark" />
+
             <Navbar />
             <div className='container my-3'>
                 <h1>Book Regular Tickets</h1>
@@ -125,12 +161,12 @@ const UnreservedTicket = () => {
                     {/* Source Stations Dropdown */}
                     <div className="mb-3">
                         <label className="form-label fs-5" htmlFor="sourceInput">Source Station</label>
-                        <select onChange={changeStation} name="source" className="form-select" id="sourceInput">
+                        <select ref={sourceInputRef} onChange={changeStation} name="source" className="form-select" defaultValue={null} id="sourceInput">
                             {
                                 (allStations.length <= 0) ?
                                     <option disabled>No Station Found</option>
                                     :
-                                    <option selected disabled>Select Station</option>
+                                    <option value={null} selected disabled>Select Station</option>
                             }
 
                             {
@@ -144,12 +180,12 @@ const UnreservedTicket = () => {
                     {/* Destination Stations Dropdown */}
                     <div className="mb-3">
                         <label className="form-label fs-5" htmlFor="destInput">Destination Station</label>
-                        <select onChange={changeStation} name="destination" className="form-select" id="destInput">
+                        <select ref={destinationInputRef} onChange={changeStation} name="destination" className="form-select" id="destInput">
                             {
                                 (allStations.length <= 0) ?
-                                    <option disabled>No Station Found</option>
+                                    <option value={null} disabled>No Station Found</option>
                                     :
-                                    <option selected disabled>Select Station</option>
+                                    <option value={null} selected disabled>Select Station</option>
                             }
 
                             {
@@ -185,15 +221,23 @@ const UnreservedTicket = () => {
                 </div>
 
                 {/* Ticket Qr Code  */}
-                {
+                {/* {
                     (ticket.encryptedTicketData) &&
                     <TicketCard
                         ticketData={ticket.ticketData}
                         encryptedTIcketData={ticket.encryptedTicketData}
                     />
+                } */}
+
+                <hr />
+
+                {
+                    (ticket.encryptedTicketData) &&
+                    <NewRegularTicketCard
+                        ticketData={ticket.encryptedTicketData}
+                        key={ticket.encryptedTicketData}
+                    />
                 }
-
-
 
             </div>
         </>
