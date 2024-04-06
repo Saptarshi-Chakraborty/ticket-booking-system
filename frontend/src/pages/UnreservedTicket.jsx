@@ -118,6 +118,8 @@ const UnreservedTicket = () => {
                 }
             });
 
+            addNewTicket(response.data);
+
             resetFields();
         } catch (error) {
             console.error(error)

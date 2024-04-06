@@ -1,11 +1,11 @@
 import CONSTANTS from "../../CONSTANTS";
 
-function addNewTicket(ticketObject) {
+function addNewTicket(ticketData) {
     const localStorageKey = CONSTANTS.ALL_TICKETS_KEY
 
     let ticketsJson = localStorage.getItem(localStorageKey) || "[]";
     const ticketsArr = JSON.parse(ticketsJson);
-    ticketsArr.push(ticketObject);
+    ticketsArr.push(ticketData);
     localStorage.setItem(localStorageKey, JSON.stringify(ticketsArr));
 }
 

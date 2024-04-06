@@ -30,6 +30,10 @@ const Navbar = () => {
                             </li>
 
                             <li className="nav-item">
+                                <Link className="nav-link active" aria-current="page" to="/my-tickets">My Tickets</Link>
+                            </li>
+
+                            <li className="nav-item">
                                 <Link className="nav-link active" aria-current="page" to="/unreserved-ticket">Unreserved Ticket</Link>
                             </li>
 

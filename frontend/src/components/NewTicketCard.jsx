@@ -1,7 +1,60 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../styles/RegularTicket.css'
+import { decodeJwtData } from '../utils/jwtAuth'
+import { createQrCode } from '../utils/qrCode';
 
 const NewRegularTicketCard = ({ ticketData }) => {
+    const [qrCodeUrl, setQrCodeUrl] = useState('')
+    const ticket = decodeJwtData(ticketData);
+    console.log(ticket);
+
+    const dateTime = new Date(ticket.exp * 1000);
+    let expiryDate = `${dateTime.toLocaleDateString()} ${dateTime.toLocaleTimeString()}`;
+
+    createQrCode(ticketData).then((res) => {
+        if (res) {
+            setQrCodeUrl(res);
+        }
+    });
+
+    const shareTicket = () => {
+        if ('share' in navigator) {
+            const newFile = imageDataUrlToFIle(qrCodeUrl);
+
+            navigator.share({ title: "Train Ticket", files: [newFile] })
+        } else {
+            console.log("Sharing is not possible")
+        }
+    }
+
+    function imageDataUrlToFIle(imageDataUrl) {
+        // Convert data URL to Blob
+        const byteString = atob(imageDataUrl.split(',')[1]);
+        const mimeString = imageDataUrl.split(',')[0].split(':')[1].split(';')[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        const blob = new Blob([ab], { type: mimeString });
+
+        // Create a File object
+        const file = new File([blob], "image.png", { type: mimeString });
+
+        // Now 'file' contains your image as a File object
+        return file;
+    }
+
+    function downloadTicket() {
+        const a = document.createElement('a');
+        a.href = qrCodeUrl;
+        a.download = `ticket-${ticket.exp}.png`;
+        a.click();
+    }
+
+
     return (
         <main className="ticket-system m-auto">
             <div className="top">
@@ -16,52 +69,59 @@ const NewRegularTicketCard = ({ ticketData }) => {
                         </div>
                         <div className="route">
                             <div className="text-left">
-                                <h2 className="text-uppercase">Sealdah</h2>
-                                <small>sdz</small>
+                                <h2 className="text-uppercase">{ticket.sourceStationName}</h2>
+                                <small>{ticket.sourceStationCode}</small>
                             </div>
 
                             <img src="/images/train-icon.svg" alt="" />
 
 
                             <div className="text-right">
-                                <h2 className="text-uppercase">Diamond Harbour</h2>
-                                <small>sdz</small>
+                                <h2 className="text-uppercase">{ticket.destinationStationName}</h2>
+                                <small>{ticket.destinationStationCode}</small>
                             </div>
                         </div>
                         <div className="details">
                             <div className="item">
                                 <span>Passanger</span>
-                                <h3>6</h3>
+                                <h3>{ticket.numberOfPassenger}</h3>
                             </div>
                             <div className="item">
-                                <span>Flight No.</span>
-                                <h3>US6969</h3>
+                                <span>Price</span>
+                                <h3>{parseInt(ticket.numberOfPassenger) * 5} Rs.</h3>
                             </div>
                             <div className="item">
-                                <span>Departure</span>
-                                <h3>08/26/2018 15:33</h3>
-                            </div>
-                            <div className="item">
-                                <span>Gate Closes</span>
-                                <h3>15:03</h3>
-                            </div>
-                            <div className="item">
-                                <span>Luggage</span>
-                                <h3>Hand Luggage</h3>
-                            </div>
-                            <div className="item">
-                                <span>Seat</span>
-                                <h3>69P</h3>
+                                <span>Valid Till</span>
+                                <h3>{expiryDate}</h3>
                             </div>
                         </div>
                     </div>
-                    <div className="receipt qr-code">
-                        <svg className="qr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29.938 29.938">
-                            <path d="M7.129 15.683h1.427v1.427h1.426v1.426H2.853V17.11h1.426v-2.853h2.853v1.426h-.003zm18.535 12.83h1.424v-1.426h-1.424v1.426zM8.555 15.683h1.426v-1.426H8.555v1.426zm19.957 12.83h1.427v-1.426h-1.427v1.426zm-17.104 1.425h2.85v-1.426h-2.85v1.426zm12.829 0v-1.426H22.81v1.426h1.427zm-5.702 0h1.426v-2.852h-1.426v2.852zM7.129 11.406v1.426h4.277v-1.426H7.129zm-1.424 1.425v-1.426H2.852v2.852h1.426v-1.426h1.427zm4.276-2.852H.002V.001h9.979v9.978zM8.555 1.427H1.426v7.127h7.129V1.427zm-5.703 25.66h4.276V22.81H2.852v4.277zm14.256-1.427v1.427h1.428V25.66h-1.428zM7.129 2.853H2.853v4.275h4.276V2.853zM29.938.001V9.98h-9.979V.001h9.979zm-1.426 1.426h-7.127v7.127h7.127V1.427zM0 19.957h9.98v9.979H0v-9.979zm1.427 8.556h7.129v-7.129H1.427v7.129zm0-17.107H0v7.129h1.427v-7.129zm18.532 7.127v1.424h1.426v-1.424h-1.426zm-4.277 5.703V22.81h-1.425v1.427h-2.85v2.853h2.85v1.426h1.425v-2.853h1.427v-1.426h-1.427v-.001zM11.408 5.704h2.85V4.276h-2.85v1.428zm11.403 11.405h2.854v1.426h1.425v-4.276h-1.425v-2.853h-1.428v4.277h-4.274v1.427h1.426v1.426h1.426V17.11h-.004zm1.426 4.275H22.81v-1.427h-1.426v2.853h-4.276v1.427h2.854v2.853h1.426v1.426h1.426v-2.853h5.701v-1.426h-4.276v-2.853h-.002zm0 0h1.428v-2.851h-1.428v2.851zm-11.405 0v-1.427h1.424v-1.424h1.425v-1.426h1.427v-2.853h4.276v-2.853h-1.426v1.426h-1.426V7.125h-1.426V4.272h1.426V0h-1.426v2.852H15.68V0h-4.276v2.852h1.426V1.426h1.424v2.85h1.426v4.277h1.426v1.426H15.68v2.852h-1.426V9.979H12.83V8.554h-1.426v2.852h1.426v1.426h-1.426v4.278h1.426v-2.853h1.424v2.853H12.83v1.426h-1.426v4.274h2.85v-1.426h-1.422zm15.68 1.426v-1.426h-2.85v1.426h2.85zM27.086 2.853h-4.275v4.275h4.275V2.853zM15.682 21.384h2.854v-1.427h-1.428v-1.424h-1.427v2.851zm2.853-2.851v-1.426h-1.428v1.426h1.428zm8.551-5.702h2.853v-1.426h-2.853v1.426zm1.426 11.405h1.427V22.81h-1.427v1.426zm0-8.553h1.427v-1.426h-1.427v1.426zm-12.83-7.129h-1.425V9.98h1.425V8.554z" />
-                        </svg>
+                    <div className="receipt qr-code gap-2 py-3">
                         <div className="description">
-                            <h2>69Pixels</h2>
                             <p>Show QR-code when requested</p>
+                        </div>
+
+                        <div className="qrcodeImageContainer">
+                            <img src={ticketData
+                                ? qrCodeUrl
+                                : ''} alt="" />
+                        </div>
+
+                        <div className="optionsBox d-flex flex-row w-100 align-items-center justify-content-between px-2">
+                            <button onClick={shareTicket} type="button" className="btn btn-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" className="bi bi-share-fill" viewBox="0 0 16 16">
+                                    <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5"></path>
+                                </svg>
+                                <span className='ms-2'>Share</span>
+                            </button>
+
+                            <button onClick={downloadTicket} type="button" className="btn btn-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-cloud-arrow-down-fill" viewBox="0 0 16 16">
+                                    <path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 6.854-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5a.5.5 0 0 1 1 0v3.793l1.146-1.147a.5.5 0 0 1 .708.708" />
+                                </svg>
+                                <span className='ms-2'>Download</span>
+                            </button>
+
                         </div>
                     </div>
                 </div>

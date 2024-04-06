@@ -6,6 +6,7 @@ import ScanQr from "./pages/ScanQr"
 import UnreservedTicket from "./pages/UnreservedTicket"
 import ReservedTicket from "./pages/ReservedTicket"
 import ManageStations from "./pages/Admin/ManageStations"
+import AllTickets from "./pages/AllTickets"
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/scan-qr" element={<ScanQr />} />
         <Route path="/unreserved-ticket" element={<UnreservedTicket />} />
         <Route path="/reserved-ticket" element={<ReservedTicket />} />
+        <Route path="/my-tickets" element={<AllTickets />} />
         <Route path="/admin/manage-stations" element={<ManageStations />} />
 
         {/* Not Found Page */}
