@@ -12,7 +12,7 @@ async function createRegularTicket(req, res) {
     const secret = process.env.TICKET_ENCRYPTION_SECRET;
 
     // create a new ticket with jwt token
-    const token = jwt.sign({ sourceStationName, sourceStationCode, destinationStationName, destinationStationCode, numberOfPassenger, userId, type: "Unreserved" }, secret, { expiresIn: '2h' });
+    const token = jwt.sign({ sourceStationName, sourceStationCode, destinationStationName, destinationStationCode, numberOfPassenger, userId, type: "Unreserved" }, secret, { expiresIn: '24h' });
 
     res.json({ "status": "success", "message": "Ticket created successfully", "data": token });
 }
