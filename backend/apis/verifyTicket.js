@@ -14,10 +14,13 @@ async function verifyTicket(req, res) {
     // verify the ticket
     jwt.verify(ticket, secret, (err, decoded) => {
         if (err) {
-            return res.json({ "status": "error", "message": "Invalid ticket" });
+            return res.json({ "status": "error", "message": "Invalid ticket", "data": decoded });
         }
 
-        res.json({ "status": "success", "message": "Ticket verified successfully", "data": decoded });
+        console.log(decoded);
+        const ticketType = decoded.type;
+
+        return res.json({ "status": "success", "message": "Ticket verified successfully", "data": decoded });
     });
 }
 

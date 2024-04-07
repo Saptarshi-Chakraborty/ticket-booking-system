@@ -7,6 +7,8 @@ const CONSTANTS = {
         "addNewStation": "/add-station",
         "getAllStations": "/stations",
         "createRegularTicket": "/regular-ticket",
+        "createReservedTicket": "/reserved-ticket",
+        "verifyTicket": "/verify-ticket",
     }
 }
 

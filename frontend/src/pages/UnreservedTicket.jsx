@@ -38,8 +38,6 @@ const UnreservedTicket = () => {
             setAllStations(parsedData.data)
 
             console.log(parsedData.data)
-        }).then(() => {
-            console.log(allStations)
         })
     }
 
@@ -221,15 +219,6 @@ const UnreservedTicket = () => {
                     <p>Number of Passenger : {ticket.noOfPassenger} </p>
                     <p>Ticket Data : {ticket.encryptedTicketData} </p>
                 </div>
-
-                {/* Ticket Qr Code  */}
-                {/* {
-                    (ticket.encryptedTicketData) &&
-                    <TicketCard
-                        ticketData={ticket.ticketData}
-                        encryptedTIcketData={ticket.encryptedTicketData}
-                    />
-                } */}
 
                 <hr />
 

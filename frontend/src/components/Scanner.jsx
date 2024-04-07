@@ -3,7 +3,7 @@ import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library'
 import AllVideoDevicesDropdown from './AllVideoDevicesDropdown';
 import FlashLightButton from './FlashLightButton';
 
-const Scanner = () => {
+const Scanner = ({ qrData, setQrData }) => {
     const codeReader = new BrowserMultiFormatReader();
 
     // State Variables
@@ -68,6 +68,7 @@ const Scanner = () => {
 
                         console.log(result)
                         outputBoxRef.current.innerText = result.toString();
+                        setQrData(result.toString());
 
                         codeReader.stopAsyncDecode();
                         codeReader.reset();

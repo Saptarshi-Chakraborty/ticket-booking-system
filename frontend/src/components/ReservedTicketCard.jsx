@@ -3,7 +3,7 @@ import '../styles/RegularTicket.css'
 import { decodeJwtData } from '../utils/jwtAuth'
 import { createQrCode } from '../utils/qrCode';
 
-const NewRegularTicketCard = ({ ticketData }) => {
+const ReservedTicketCard = ({ ticketData }) => {
     const [qrCodeUrl, setQrCodeUrl] = useState('')
     const ticket = decodeJwtData(ticketData);
     console.log(ticket);
@@ -130,4 +130,4 @@ const NewRegularTicketCard = ({ ticketData }) => {
     )
 }
 
-export default NewRegularTicketCard
+export default ReservedTicketCard

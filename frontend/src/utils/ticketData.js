@@ -1,7 +1,12 @@
 import { decodeJwtData } from "./jwtAuth";
+import { createQrCode } from "./qrCode";
 
-const shareTicket = (qrCodeUrl) => {
+
+const shareTicket = async (ticketData) => {
     if ('share' in navigator) {
+        const qrCodeUrl = await createQrCode(ticketData);
+
+        console.log(qrCodeUrl)
         const newFile = imageDataUrlToFIle(qrCodeUrl);
 
         navigator.share({ title: "Train Ticket", files: [newFile] })
@@ -31,9 +36,10 @@ function imageDataUrlToFIle(imageDataUrl) {
     return file;
 }
 
-function downloadTicket({ qrCodeUrl }) {
-    const ticket = decodeJwtData(qrCodeUrl);
-
+function downloadTicket(encyptedTicketData) {
+    const ticket = decodeJwtData(encyptedTicketData);
+    const qrCodeUrl = createQrCode(encyptedTicketData);
+    
     const a = document.createElement('a');
     a.href = qrCodeUrl;
     a.download = `ticket-${ticket.exp}.png`;
