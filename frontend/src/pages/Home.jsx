@@ -1,10 +1,11 @@
-import Navbar from "../components/Navbar"
+import Navbar from "../components/Navbar/MasterNavbar.jsx"
+
 
 const Home = () => {
     return (
         <div>
             <Navbar />
-            Home
+            <h1>Home</h1>
         </div>
     )
 }

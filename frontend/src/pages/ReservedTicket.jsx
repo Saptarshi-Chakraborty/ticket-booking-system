@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react'
-import Navbar from '../components/Navbar'
+import Navbar from '../components/Navbar/MasterNavbar'
 import CONSTANTS from '../../CONSTANTS';
 import PassengerDetailsBox from '../components/ReservedTicket/PassengerDetailsBox';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css';
 import { addNewTicket } from '../utils/localstorage';
-import ReservedTicketCard from '../components/ReservedTicketCard';
+import ReservedTicketCard from '../components/ReservedTicket/ReservedTicketCard';
 
 const ReservedTicket = () => {
     const [ticketDetails, setTicketDetails] = useState({ ticketId: null, destination: null, source: null, ticketData: null, encryptedTicketData: null, noOfPassenger: 1 });

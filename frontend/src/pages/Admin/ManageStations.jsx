@@ -2,7 +2,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css';
 import CONSTANTS from '../../../CONSTANTS'
 import AddStationModal from '../../components/Admin/AddStationModal'
-import Navbar from '../../components/Navbar'
+import Navbar from '../../components/Navbar/MasterNavbar'
 import React, { useRef, useState } from 'react'
 import AllStationsTable from '../../components/Admin/AllStationsTable'
 
@@ -31,10 +31,11 @@ const ManageStations = () => {
         }
 
         if (response.status === "success") {
-            console.log(response.data);
+            // console.log(response.data);
 
-            setStations(response.data);
-            
+            const sortedData = response.data.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+            setStations(sortedData);
+
             toast.success(response.msg);
             ref.current = true;
         }

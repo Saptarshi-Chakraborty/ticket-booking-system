@@ -3,12 +3,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css';
-import Navbar from '../components/Navbar'
+import Navbar from '../components/Navbar/MasterNavbar'
 import { ALL_STATIONS } from '../../public/data/allStations'
 import TicketCard from '../components/TicketCard';
 import { addNewTicket } from '../utils/localstorage';
 import CONSTANTS from '../../CONSTANTS';
 import NewRegularTicketCard from '../components/NewTicketCard';
+import calculateDistance from '../utils/distanceCalculator';
 
 
 const UnreservedTicket = () => {
@@ -84,6 +85,9 @@ const UnreservedTicket = () => {
         const sourceStation = allStations.filter((item) => (item.code == ticket.source))[0];
         const destinationStation = allStations.filter((item) => (item.code == ticket.destination))[0];
 
+        const distance = calculateDistance(sourceStation.lat, sourceStation.long, destinationStation.lat, destinationStation.long);
+        const fare = Math.round(distance * CONSTANTS.UnreservedTicketFarePerKm * ticket.noOfPassenger);
+
         const ticketData = {
             sourceStationName: sourceStation.name,
             sourceStationCode: sourceStation.code,
@@ -91,8 +95,9 @@ const UnreservedTicket = () => {
             destinationStationCode: destinationStation.code,
             numberOfPassenger: ticket.noOfPassenger,
             userId: null,
+            distance,
+            fare
         };
-
 
         const API = `${CONSTANTS.API.BASE_URL}${CONSTANTS.API.createRegularTicket}`;
         const params = { body: JSON.stringify(ticketData), method: 'POST', headers: { 'Content-Type': 'application/json' } };

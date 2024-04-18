@@ -13,9 +13,9 @@ const UnreservedTicketCard = ({ decodeResult }) => {
                 <span>Ticket Data</span>
                 {
                     decodeResult.status === "success" ?
-                        <span class="badge text-bg-success ms-2">Valid Ticket</span>
+                        <span className="badge text-bg-success ms-2">Valid Ticket</span>
                         :
-                        <span class="badge text-bg-danger ms-2">Invalid Ticket</span>
+                        <span className="badge text-bg-danger ms-2">Invalid Ticket</span>
                 }
 
             </div>

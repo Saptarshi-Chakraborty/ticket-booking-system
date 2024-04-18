@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library'
 import AllVideoDevicesDropdown from './AllVideoDevicesDropdown';
 import FlashLightButton from './FlashLightButton';
+import { toast } from 'react-toastify';
 
 const Scanner = ({ qrData, setQrData }) => {
     const codeReader = new BrowserMultiFormatReader();
@@ -33,7 +34,16 @@ const Scanner = ({ qrData, setQrData }) => {
     }
 
     async function getVideoPermission() {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
+        const constraints = {
+            video: {
+                facingMode: "environment"
+            },
+            audio: false
+        };
+
+        toast.info("Requesting camera permissions")
+
+        navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
             console.log("Got camera permissions");
 
             setVideoState({ ...videoState, gotPermissions: true })
@@ -41,7 +51,7 @@ const Scanner = ({ qrData, setQrData }) => {
             getAllAvailavleVideoInputs();
         }).catch((err) => {
             console.log(err);
-            alert("Error in getting camera permissions")
+            toast.error("Error in getting camera permissions")
         })
     }
 
@@ -102,8 +112,6 @@ const Scanner = ({ qrData, setQrData }) => {
         if (videoElement.srcObject === null) return;
         videoElement.srcObject.getTracks().forEach(track => track.stop());
         videoElement.srcObject = null;
-
-
     }
 
 

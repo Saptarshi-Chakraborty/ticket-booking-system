@@ -1,13 +1,13 @@
 "use client";
 
 import React from 'react'
-import Navbar from '../components/Navbar';
+import Navbar from '../components/Navbar/MasterNavbar';
 import { getAllTickets } from '../utils/localstorage';
 import RegularTicketAccordionItem from './TicketAccordionItem';
 
 const AllTickets = () => {
 
-  const allTickets = getAllTickets();
+  const allTickets = getAllTickets().reverse();
 
   console.log(allTickets)
 

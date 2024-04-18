@@ -1,7 +1,19 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { getLoginDetails, isLoggedIn } from '../../utils/authentication.js'
+import { removeAuthToken } from '../../utils/localstorage.js';
 
-const Navbar = () => {
+const UserNavbar = ({ isLoggedin, loginDetails }) => {
+    const navigate = useNavigate();
+
+    function logoutUser() {
+        // Remove the token from local storage
+        removeAuthToken();
+
+        // Redirect to home page
+        navigate('/', { replace: true });
+    }
+
     return (
         <nav className="navbar navbar-expand-lg bg-body-white">
             <div className="container-fluid px-lg-5">
@@ -26,10 +38,6 @@ const Navbar = () => {
                             </li>
 
                             <li className="nav-item">
-                                <Link className="nav-link active" aria-current="page" to="/scan-qr">Scan QR</Link>
-                            </li>
-
-                            <li className="nav-item">
                                 <Link className="nav-link active" aria-current="page" to="/my-tickets">My Tickets</Link>
                             </li>
 
@@ -41,25 +49,20 @@ const Navbar = () => {
                                 <Link className="nav-link active" aria-current="page" to="/reserved-ticket">Reserved Ticket</Link>
                             </li>
 
-                            <li className="nav-item dropdown">
-                                <a className="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Admin
-                                </a>
-                                <ul className="dropdown-menu">
-                                    <li><Link className="dropdown-item" to="/admin/manage-stations">Stations</Link></li>
-                                    <li><hr className="dropdown-divider" /></li>
-                                    <li><a className="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </li>
-
                             {/* Accounts Section in Menu */}
-                            <li className="nav-item">
-                                <Link className=" btn btn-primary" to="/login">Login</Link>
-                            </li>
+                            {
+                                (isLoggedin) ?
+                                    <li className="nav-item">
+                                        <button onClick={logoutUser} className=" btn btn-danger" to="/register">Log out</button>
+                                    </li>
+                                    :
+                                    <li className="nav-item">
+                                        <Link className=" btn btn-primary" to="/login">Login</Link>
+                                    </li>
+                            }
 
                         </ul>
                     </div>
-
 
                 </div>
             </div>
@@ -67,4 +70,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar
+export default UserNavbar

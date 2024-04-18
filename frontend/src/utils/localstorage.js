@@ -19,4 +19,21 @@ function getAllTickets() {
     return [];
 }
 
+function saveAuthToken(token) {
+    localStorage.setItem(CONSTANTS.AUTH_TOKEN_KEY, token);
+}
+
+function getAuthToken() {
+    return localStorage.getItem(CONSTANTS.AUTH_TOKEN_KEY);
+}
+
+function removeAuthToken() {
+    localStorage.removeItem(CONSTANTS.AUTH_TOKEN_KEY);
+}
+
+
+// Train ticket
 export { addNewTicket, getAllTickets }
+
+// Auth token
+export { saveAuthToken, getAuthToken, removeAuthToken }

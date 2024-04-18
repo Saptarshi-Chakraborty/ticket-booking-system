@@ -6,15 +6,26 @@ async function addNewStation(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
 
     const body = req.body;
-    const { name, code } = body;
+    let { name, code, lat, long } = body;
 
     console.log(body);
 
-    if (!name || !code) {
+    if (!name || !code || !lat || !long) {
+        res.status(400).json({ "status": "error", "type": "bad-request", "msg": "Invalid values in request" });
+        return;
+    }
+
+    // Convert lat and long to Number
+    lat = Number(lat);
+    long = Number(long);
+
+    // Check if lat and long are valid numbers
+    if (isNaN(lat) || isNaN(long)) {
         res.status(400).json({ "status": "error", "msg": "Invalid values in request" });
         return;
     }
-    console.log(`Name: ${name}, Code: ${code}`);
+
+    console.log(`Name: ${name}, Code: ${code} Lat: ${lat}, Long: ${long}`);
 
     const connection = await mongoose.connect(GLOBALS.mongoURI);
 
@@ -31,7 +42,7 @@ async function addNewStation(req, res) {
         return;
     }
 
-    const newStation = new Station({ name, code });
+    const newStation = new Station({ name, code, lat, long });
     const result = await newStation.save();
 
     if (!result) {

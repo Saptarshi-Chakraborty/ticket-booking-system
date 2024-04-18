@@ -7,6 +7,7 @@ import UnreservedTicket from "./pages/UnreservedTicket"
 import ReservedTicket from "./pages/ReservedTicket"
 import ManageStations from "./pages/Admin/ManageStations"
 import AllTickets from "./pages/AllTickets"
+import Signup from "./pages/Signup"
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
 
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/scan-qr" element={<ScanQr />} />
         <Route path="/unreserved-ticket" element={<UnreservedTicket />} />
         <Route path="/reserved-ticket" element={<ReservedTicket />} />

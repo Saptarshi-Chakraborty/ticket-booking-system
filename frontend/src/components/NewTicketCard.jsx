@@ -66,6 +66,7 @@ const NewRegularTicketCard = ({ ticketData }) => {
                         <div className='brand-logo'>
                             <img src="/images/icon-192.png" alt="" />
                             <span>TBS</span>
+                            <span className='text-ticket'>#{ticket.id}</span>
                         </div>
                         <div className="route">
                             <div className="text-left">
@@ -88,7 +89,7 @@ const NewRegularTicketCard = ({ ticketData }) => {
                             </div>
                             <div className="item">
                                 <span>Price</span>
-                                <h3>{parseInt(ticket.numberOfPassenger) * 5} Rs.</h3>
+                                <h3>{parseInt(ticket.fare) * 5} Rs.</h3>
                             </div>
                             <div className="item">
                                 <span>Valid Till</span>
@@ -104,7 +105,7 @@ const NewRegularTicketCard = ({ ticketData }) => {
                         <div className="qrcodeImageContainer">
                             <img src={ticketData
                                 ? qrCodeUrl
-                                : ''} alt="" />
+                                : ''} className='zoomOnHover' tabIndex="1" alt="Ticket QR Code" />
                         </div>
 
                         <div className="optionsBox d-flex flex-row w-100 align-items-center justify-content-between px-2">

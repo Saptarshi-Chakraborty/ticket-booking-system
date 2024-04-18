@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
-import '../styles/RegularTicket.css'
-import { decodeJwtData } from '../utils/jwtAuth'
-import { createQrCode } from '../utils/qrCode';
+import '../../styles/RegularTicket.css'
+import { decodeJwtData } from '../../utils/jwtAuth'
+import { createQrCode } from '../../utils/qrCode';
+
 
 const ReservedTicketCard = ({ ticketData }) => {
     const [qrCodeUrl, setQrCodeUrl] = useState('')
     const ticket = decodeJwtData(ticketData);
     console.log(ticket);
+
+    const fullBerthName = { 'lb': "Lower Berth", 'mb': "Middle Berth", 'ub': "Upper Berth", 'sl': "Side Lower", 'su': "Side Upper" }
 
     const dateTime = new Date(ticket.exp * 1000);
     let expiryDate = `${dateTime.toLocaleDateString()} ${dateTime.toLocaleTimeString()}`;
@@ -83,7 +86,7 @@ const ReservedTicketCard = ({ ticketData }) => {
                         </div>
                         <div className="details">
                             <div className="item">
-                                <span>Passanger</span>
+                                <span>Total Passanger</span>
                                 <h3>{ticket.numberOfPassenger}</h3>
                             </div>
                             <div className="item">
@@ -93,6 +96,26 @@ const ReservedTicketCard = ({ ticketData }) => {
                             <div className="item">
                                 <span>Valid Till</span>
                                 <h3>{expiryDate}</h3>
+                            </div>
+
+                            <div className="item">
+                                <span>Passengers Details</span>
+                                <div>
+
+                                    {
+                                        ticket.passengers.map((passenger, index) => {
+                                            return (
+                                                <p key={index} className="passenger-details fs-4 text-black text-wrap">
+                                                    <span className='fw-semibold'>{index + 1}. </span>
+                                                    <span>{passenger.name}</span>
+                                                    <span> ({passenger.age}, {passenger.gender.toUpperCase()}) </span>
+                                                    <span> - {fullBerthName[passenger?.berth]}</span>
+                                                </p>
+                                            )
+                                        })
+                                    }
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -104,7 +127,7 @@ const ReservedTicketCard = ({ ticketData }) => {
                         <div className="qrcodeImageContainer">
                             <img src={ticketData
                                 ? qrCodeUrl
-                                : ''} alt="" />
+                                : ''} alt="" className="zoomOnHover" tabIndex="1" />
                         </div>
 
                         <div className="optionsBox d-flex flex-row w-100 align-items-center justify-content-between px-2">
