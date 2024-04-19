@@ -3,25 +3,29 @@
 import { useEffect, useRef, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css';
-import Navbar from '../components/Navbar/MasterNavbar'
-import { ALL_STATIONS } from '../../public/data/allStations'
-import TicketCard from '../components/TicketCard';
-import { addNewTicket } from '../utils/localstorage';
+import Navbar from '../components/Navbar/MasterNavbar';
+import { addNewTicket, getAuthToken } from '../utils/localstorage';
 import CONSTANTS from '../../CONSTANTS';
 import NewRegularTicketCard from '../components/NewTicketCard';
 import calculateDistance from '../utils/distanceCalculator';
+import { isLoggedIn } from '../utils/authentication';
+import { useNavigate } from 'react-router-dom';
 
 
 const UnreservedTicket = () => {
+
     // ---- State Variables ---- //
-    const [ticket, setTicket] = useState({ source: null, destination: null, ticketData: null, encryptedTicketData: null, noOfPassenger: 1 })
+    const [ticket, setTicket] = useState({ source: "", destination: "", ticketData: null, encryptedTicketData: null, noOfPassenger: 1 })
     const [allStations, setAllStations] = useState([])
     const [showTicketCard, setShowTicketCard] = useState(false)
 
-    // Ref variables
+
+    // ---- Ref variables ---- //
     const sourceInputRef = useRef(null)
     const destinationInputRef = useRef(null)
 
+
+    const navigate = useNavigate();
 
 
     // ---- Custom Functions ---- //
@@ -70,9 +74,17 @@ const UnreservedTicket = () => {
         })
     }
 
-
     async function bookTicket() {
         console.log("Booking ticket...")
+
+        if (isLoggedIn() == false) {
+            toast.error("Please login to book ticket")
+            setTimeout(() => {
+                navigate("/login");
+            }, 3000);
+            return;
+        }
+
         if (!ticket.source || !ticket.destination) return;
         console.log(ticket);
 
@@ -94,9 +106,9 @@ const UnreservedTicket = () => {
             destinationStationName: destinationStation.name,
             destinationStationCode: destinationStation.code,
             numberOfPassenger: ticket.noOfPassenger,
-            userId: null,
             distance,
-            fare
+            fare,
+            AUTH_TOKEN: getAuthToken()
         };
 
         const API = `${CONSTANTS.API.BASE_URL}${CONSTANTS.API.createRegularTicket}`;
@@ -106,7 +118,16 @@ const UnreservedTicket = () => {
             const response = await fetch(API, params).then(res => res.json())
 
             if (response.status == "error") {
+
+                if (response.type == "unauthorized") {
+                    toast.error("Please login to book ticket");
+
+                    setTimeout(() => {
+                        navigate("/login");
+                    }, 3000);
+                }
                 toast.error(response.msg)
+
                 return;
             }
 
@@ -145,14 +166,13 @@ const UnreservedTicket = () => {
 
     // ---- Hoocks ---- ///
 
-
     useEffect(() => {
         // setAllStations(ALL_STATIONS)
         getAllStations();
     }, []);
 
 
-
+    // ---- JSX ---- //
 
     return (
         <>

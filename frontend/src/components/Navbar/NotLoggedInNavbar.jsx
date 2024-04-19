@@ -3,27 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { getLoginDetails, isLoggedIn } from '../../utils/authentication.js'
 import { removeAuthToken } from '../../utils/localstorage.js';
 
-const NotLoggedinNavbar = () => {
-    const [isLoggedin, setIsLoggedin] = useState(false);
-    const [loginDetails, setLoginDetails] = useState(getLoginDetails());
-
-    const navigate = useNavigate();
-
-    function logoutUser() {
-        // Remove the token from local storage
-        removeAuthToken();
-
-        // Redirect to home page
-        navigate('/', { replace: true });
-    }
-
-    useEffect(() => {
-        setIsLoggedin(isLoggedIn())
-        if (isLoggedIn()) {
-            setLoginDetails(getLoginDetails())
-        }
-    }, [])
-
+const NotLoggedinNavbar = ({ isLoggedin, loginDetails, logoutUser }) => {
 
     return (
         <nav className="navbar navbar-expand-lg bg-body-white">

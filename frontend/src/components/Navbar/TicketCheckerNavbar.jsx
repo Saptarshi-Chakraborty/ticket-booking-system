@@ -3,16 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { getLoginDetails, isLoggedIn } from '../../utils/authentication.js'
 import { removeAuthToken } from '../../utils/localstorage.js';
 
-const TicketChekerNavbar = ({ isLoggedin, loginDetails }) => {
-    const navigate = useNavigate();
-
-    function logoutUser() {
-        // Remove the token from local storage
-        removeAuthToken();
-
-        // Redirect to home page
-        navigate('/', { replace: true });
-    }
+const TicketChekerNavbar = ({ isLoggedin, loginDetails, logoutUser }) => {
 
     return (
         <nav className="navbar navbar-expand-lg bg-body-white">

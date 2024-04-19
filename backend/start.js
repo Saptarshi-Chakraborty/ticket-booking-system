@@ -10,12 +10,12 @@ import createReservedTicket from './apis/reservedTicket.js';
 import createUser from "./apis/createUser.js";
 import cookieParser from 'cookie-parser'; // import cookie parser
 import loginUser from './apis/login.js';
+import fetchAllTickets from './apis/getAllTickets.js';
 
 dotenv.config(); // Load .env file
 
 
 const app = express()
-const port = 3000
 
 app.use(cors());
 app.use(express.json());
@@ -37,11 +37,14 @@ app.get('/stations', getAllStations);
 app.post('/regular-ticket', createRegularTicket);
 app.post('/reserved-ticket', createReservedTicket);
 app.post('/verify-ticket', verifyTicket);
+app.post('/my-tickets', fetchAllTickets);
 
 // < ---- USERS ---->
 app.post('/create-user', createUser);
-app.post('/login',loginUser);
+app.post('/login', loginUser);
 
+
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Backend app running at http://localhost:${port}`)
 })

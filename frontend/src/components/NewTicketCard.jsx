@@ -63,10 +63,10 @@ const NewRegularTicketCard = ({ ticketData }) => {
             <div className="receipts-wrapper">
                 <div className="receipts">
                     <div className="receipt">
+                        <span className='text-ticket'>#{ticket.id}</span>
                         <div className='brand-logo'>
                             <img src="/images/icon-192.png" alt="" />
                             <span>TBS</span>
-                            <span className='text-ticket'>#{ticket.id}</span>
                         </div>
                         <div className="route">
                             <div className="text-left">

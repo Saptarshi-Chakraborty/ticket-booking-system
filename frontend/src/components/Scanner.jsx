@@ -36,7 +36,7 @@ const Scanner = ({ qrData, setQrData }) => {
     async function getVideoPermission() {
         const constraints = {
             video: {
-                facingMode: "environment"
+                facingMode: ["environment", "user"]
             },
             audio: false
         };

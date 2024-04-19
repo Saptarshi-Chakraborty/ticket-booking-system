@@ -17,6 +17,8 @@ const Navbar = () => {
         // Remove the token from local storage
         removeAuthToken();
 
+        setIsLoggedin(false);
+
         // Redirect to home page
         navigate('/', { replace: true });
     }
@@ -36,12 +38,12 @@ const Navbar = () => {
                     <>
                         {
                             (loginDetails.role === 'user') &&
-                            <UserNavbar isLoggedin={isLoggedin} loginDetails={loginDetails} />
+                            <UserNavbar isLoggedin={isLoggedin} loginDetails={loginDetails} logoutUser={logoutUser} />
                         }
 
                         {
                             (loginDetails.role === 'checker') &&
-                            <TicketChekerNavbar isLoggedin={isLoggedin} loginDetails={loginDetails} />
+                            <TicketChekerNavbar isLoggedin={isLoggedin} loginDetails={loginDetails} logoutUser={logoutUser} />
                         }
 
                         {
@@ -50,7 +52,7 @@ const Navbar = () => {
                         }
                     </>
                     :
-                    <NotLoggedinNavbar isLoggedin={isLoggedin} />
+                    <NotLoggedinNavbar isLoggedin={isLoggedin} loginDetails={loginDetails} logoutUser={logoutUser} />
             }
         </>
     )

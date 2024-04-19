@@ -12,6 +12,7 @@ const CONSTANTS = {
         "verifyTicket": "/verify-ticket",
         "createUser": "/create-user",
         "loginUser": "/login",
+        "getUserTickets": "/my-tickets",
     },
     "UnreservedTicketFarePerKm": 0.5,
     "ReservedTicketFarePerKm": 1.5,

@@ -5,14 +5,39 @@ import mongoose from 'mongoose';
 
 async function createRegularTicket(req, res) {
 
-    let { sourceStationName, sourceStationCode, destinationStationName, destinationStationCode, numberOfPassenger, userId, fare, distance } = req.body;
+    let { sourceStationName, sourceStationCode, destinationStationName, destinationStationCode, numberOfPassenger, fare, distance, AUTH_TOKEN } = req.body;
+
+    if (!AUTH_TOKEN) {
+        return res.json({ "status": "error", "type": "unauthorized", "msg": "Unauthorized access 1" });
+    }
+
+    // verify the token
+    const encryptionSecret = process.env.AUTH_TOKEN_SECRET;
+    let decodedData = null;
+
+    await jwt.verify(AUTH_TOKEN, encryptionSecret, (err, decoded) => {
+        if (err) {
+            return res.json({ "status": "error", "type": "unauthorized", "msg": "Unauthorized access 2" });
+        }
+
+        decodedData = decoded;
+    });
+
+    console.log(decodedData);
+    const userId = decodedData.id;
 
     // validate the request
-    if (!sourceStationName || !sourceStationCode || !destinationStationName || !destinationStationCode || !numberOfPassenger || userId === undefined || !fare || !distance) {
+    if (!sourceStationName || !sourceStationCode || !destinationStationName || !destinationStationCode || !numberOfPassenger || !fare || !distance) {
         return res.json({ "status": "error", "message": "Invalid request" });
     }
 
-    // insert into database
+    // create token for ticket
+    const secret = process.env.TICKET_ENCRYPTION_SECRET;
+
+    // create a new ticket with jwt token
+    const token = jwt.sign({ sourceStationName, sourceStationCode, destinationStationName, destinationStationCode, numberOfPassenger, userId, fare, distance, type: "Unreserved" }, secret, { expiresIn: '24h' });
+
+    // connect with database
     const connection = await mongoose.connect(GLOBALS.mongoURI);
 
     if (!connection) {
@@ -20,9 +45,8 @@ async function createRegularTicket(req, res) {
         res.status(500).json({ "status": "error", "msg": "Internal Server Error" });
     }
 
-    userId = (userId == null) ? "null" : userId;
 
-    const newTicket = new RegularTicket({ userId, sourceStation: { name: sourceStationName, code: sourceStationCode }, destinationStation: { name: destinationStationName, code: destinationStationCode }, numberOfPassengers: numberOfPassenger, distance, amount: fare });
+    const newTicket = new RegularTicket({ userId, sourceStation: { name: sourceStationName, code: sourceStationCode }, destinationStation: { name: destinationStationName, code: destinationStationCode }, numberOfPassengers: numberOfPassenger, distance, amount: fare, ticketData: token });
     const result = await newTicket.save();
 
     if (!result) {
@@ -30,12 +54,6 @@ async function createRegularTicket(req, res) {
     }
     console.log(result);
 
-    // create token
-
-    const secret = process.env.TICKET_ENCRYPTION_SECRET;
-
-    // create a new ticket with jwt token
-    const token = jwt.sign({ id: result._id, sourceStationName, sourceStationCode, destinationStationName, destinationStationCode, numberOfPassenger, userId, fare, distance, type: "Unreserved" }, secret, { expiresIn: '24h' });
 
     // send the token to the user
     res.json({ "status": "success", "message": "Ticket created successfully", "data": token, id: result._id });

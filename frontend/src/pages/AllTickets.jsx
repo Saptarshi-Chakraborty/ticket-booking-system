@@ -1,34 +1,139 @@
 "use client";
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar/MasterNavbar';
-import { getAllTickets } from '../utils/localstorage';
+import { getAuthToken } from '../utils/localstorage';
 import RegularTicketAccordionItem from './TicketAccordionItem';
+import CONSTANTS from '../../CONSTANTS';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AllTickets = () => {
+  const [unreservedTickets, setUnreservedTickets] = useState([])
+  const [reservedTickets, setReservedTickets] = useState([])
+  const [firstRender, setFirstRender] = useState(true)
 
-  const allTickets = getAllTickets().reverse();
+  async function fetchUserTickets() {
+    console.log("Fetching user tickets...")
 
-  console.log(allTickets)
+    const API = `${CONSTANTS.API.BASE_URL}${CONSTANTS.API.getUserTickets}`;
+
+    try {
+      const response = await fetch(API, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          AUTH_TOKEN: getAuthToken()
+        })
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      // If error
+      if (data.status === "error") {
+
+        if (data.type === "unauthorized") {
+          toast.error("Please login to view your tickets");
+
+        }
+        else
+          toast.error(data.msg);
+
+        console.log(data);
+        return
+      }
+
+      // If success
+      if (data.status === "success") {
+        setUnreservedTickets(data.unreservedTickets.reverse());
+        setReservedTickets(data.reservedTickets.reverse());
+      }
+
+
+
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to fetch user tickets");
+    }
+
+  }
+
+  useEffect(() => {
+    console.log("Mounting AllTickets.jsx");
+
+    if (firstRender) {
+      fetchUserTickets();
+      setFirstRender(false);
+    }
+
+    return () => {
+      console.log("Unmounting AllTickets.jsx");
+      setUnreservedTickets([]);
+    }
+  }, [])
+
 
   return (
     <>
       <Navbar />
+      <ToastContainer position="top-left" theme="dark" />
       <main className='container my-3'>
         <h1>Your Tickets</h1>
 
-        <div className="accordion" id="accordionExample">
-          {
-            (allTickets != undefined) &&
-            allTickets.map((item, index) => {
-              return <RegularTicketAccordionItem key={index} ticketData={item} index={index} />
-            })
-          }
+        <div className="my-2">
+          <button onClick={fetchUserTickets} className="btn btn-warning">Fetch All Tickets</button>
         </div>
+        <hr />
+
+
+        <section>
+          <h3 className='mt-3'>Unreserved Tickets :</h3>
+          <div className="accordion" id="accordionExample">
+            {
+              unreservedTickets.length === 0 &&
+              <div className="alert alert-warning" role="alert">
+                No unreserved tickets found
+              </div>
+            }
+            {
+              (unreservedTickets.length !== 0) &&
+              unreservedTickets.map((item, index) => {
+                return <RegularTicketAccordionItem key={index} ticket={item} index={index} />
+              })
+            }
+          </div>
+          <hr />
+        </section>
+
+        <section>
+          <h3 className='mt-3'>Reserved Tickets :</h3>
+          <div className="accordion" id="accordionExample">
+            {
+              reservedTickets.length === 0 &&
+              <div className="alert alert-warning" role="alert">
+                No reserved tickets found
+              </div>
+            }
+            {
+              (reservedTickets.length !== 0) &&
+              reservedTickets.map((item, index) => {
+                return <RegularTicketAccordionItem key={index} ticket={item} index={index} />
+              })
+            }
+          </div>
+          <hr />
+        </section>
+
+
 
       </main>
     </>
   )
+
 }
+
 
 export default AllTickets
