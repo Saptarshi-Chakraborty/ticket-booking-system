@@ -37,7 +37,7 @@ const ManageStations = () => {
             const sortedData = response.data.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
             setStations(sortedData);
 
-            toast.success(response.msg);
+            // toast.success(response.msg);
             ref.current = true;
         }
     }

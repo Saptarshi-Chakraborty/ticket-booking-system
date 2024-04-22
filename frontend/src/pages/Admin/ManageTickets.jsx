@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import Navbar from '../../components/Navbar/MasterNavbar'
 import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import TicketAnalytics from '../../components/Admin/Tickets/TicketAnalytics'
-import CONSTANTS from '../../../CONSTANTS.js'
-import { getAuthToken } from '../../utils/localstorage.js'
-import TicketsLineChart from '../../components/Admin/Tickets/TicketChart.jsx'
+import 'react-toastify/dist/ReactToastify.min.css';
+import Navbar from '../../components/Navbar/MasterNavbar'
+import CONSTANTS from '../../../CONSTANTS';
+import { getAuthToken } from '../../utils/localstorage';
+import ReservedTicketsTable from '../../components/Admin/Tickets/ReservedTicketsTable';
+import UnreservedTicketsTable from '../../components/Admin/Tickets/UnreservedTicketsTable';
 
 const ManageTickets = () => {
-
-    // ---- State Variables ---- //
+    // --- State Variables --- //
     const [reservedTickets, setReservedTickets] = useState([])
     const [unreservedTickets, setUnreservedTickets] = useState([])
     const [hasFetched, setHasFetched] = useState(false)
 
-
-    // ---- Custom Functions ---- //
-
+    // --- Custom Functions --- //
     async function fetchTickets() {
         try {
             const API = `${CONSTANTS.API.BASE_URL}${CONSTANTS.API.adminApis.getAllTickets}`;
@@ -48,33 +45,53 @@ const ManageTickets = () => {
     }
 
 
-    // ---- Side Effects ---- //
+    // --- Side Effects --- //
     useEffect(() => {
         if (!hasFetched) {
             fetchTickets();
-            setHasFetched(true)
-
-            // eslint-disable-next-line
+            setHasFetched(true);
         }
-    }, [hasFetched])
+    }, [hasFetched]);
 
 
+    // --- JSX --- //
+    return (
+        <>
+            <Navbar />
+            <ToastContainer position='top-left' theme='dark' />
 
-    // ---- JSX ---- //
+            {/*  <AddStationModal /> */}
 
-    return (<>
-        <Navbar />
-        <ToastContainer position="top-left" theme="dark" />
+            <div className="container my-3">
+                <section className="d-flex  justify-content-between align-items-center">
+                    <h1>All tickets</h1>
 
-        <main className="container my-3">
-            <button onClick={fetchTickets} className="btn btn-primary">Fetch Tickets</button>
-            <TicketAnalytics reservedTickets={reservedTickets} unreservedTickets={unreservedTickets} />
-{/* 
-            <TicketsLineChart reservedTickets={reservedTickets} unreservedTickets={unreservedTickets} /> */}
+                    <div >
+                        {/* <button type="button" className="btn btn-success me-2" data-bs-toggle="modal" data-bs-target={`#${modalId}`}>
+                            Add Ticket
+                        </button> */}
+                        <button onClick={fetchTickets} type="button" className="btn btn-warning">
+                            Get All Tickets
+                        </button>
+                    </div>
+                </section>
 
-        </main>
+                {
+                    (unreservedTickets.length > 0) &&
+                    <UnreservedTicketsTable unreservedTickets={unreservedTickets} />
+                }
 
-    </>)
+                <hr />
+
+                {
+                    (reservedTickets.length > 0) &&
+                    <ReservedTicketsTable reservedTickets={reservedTickets} />
+                }
+
+
+            </div >
+        </>
+    )
 }
 
 export default ManageTickets
