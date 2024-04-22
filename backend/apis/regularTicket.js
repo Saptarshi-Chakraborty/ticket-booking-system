@@ -46,7 +46,7 @@ async function createRegularTicket(req, res) {
     }
 
 
-    const newTicket = new RegularTicket({ userId, sourceStation: { name: sourceStationName, code: sourceStationCode }, destinationStation: { name: destinationStationName, code: destinationStationCode }, numberOfPassengers: numberOfPassenger, distance, amount: fare, ticketData: token });
+    const newTicket = new RegularTicket({ userId, sourceStation: { name: sourceStationName, code: sourceStationCode }, destinationStation: { name: destinationStationName, code: destinationStationCode }, numberOfPassengers: numberOfPassenger, distance, fare, ticketData: token });
     const result = await newTicket.save();
 
     if (!result) {

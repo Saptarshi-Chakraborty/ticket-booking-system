@@ -15,14 +15,17 @@ import { useNavigate } from 'react-router-dom';
 const UnreservedTicket = () => {
 
     // ---- State Variables ---- //
-    const [ticket, setTicket] = useState({ source: "", destination: "", ticketData: null, encryptedTicketData: null, noOfPassenger: 1 })
+    const [ticket, setTicket] = useState({ source: "null", destination: "null", ticketData: null, encryptedTicketData: null, noOfPassenger: 1 })
+    const [ticketCardData, setTicketCardData] = useState({ encryptedTicketData: null, ticketData: null, id: null })
     const [allStations, setAllStations] = useState([])
+    const [hasFetched, setHasFetched] = useState(false)
     const [showTicketCard, setShowTicketCard] = useState(false)
 
 
     // ---- Ref variables ---- //
     const sourceInputRef = useRef(null)
     const destinationInputRef = useRef(null)
+    const ticketCardDataRef = useRef({ encryptedTicketData: null, ticketData: null, id: null })
 
 
     const navigate = useNavigate();
@@ -56,6 +59,11 @@ const UnreservedTicket = () => {
                 [name]: value
             }
         })
+
+        if ((name == "source" || name == "destination") && value == "null") {
+            setTicketCardData({ encryptedTicketData: null, ticketData: null, id: null })
+        }
+
     }
 
     function changePassenger(changeBy) {
@@ -85,7 +93,7 @@ const UnreservedTicket = () => {
             return;
         }
 
-        if (!ticket.source || !ticket.destination) return;
+        if (ticket.source === "null" || ticket.destination === "null") return;
         console.log(ticket);
 
 
@@ -134,13 +142,11 @@ const UnreservedTicket = () => {
             toast.success("Ticket Booked Successfully")
             console.log(response);
 
-            setTicket((oldData) => {
-                return {
-                    ...oldData,
-                    ticketData: ticketData,
-                    encryptedTicketData: response.data
-                }
-            });
+            setTicketCardData({ encryptedTicketData: response.data, ticketData: ticketData, id: response.id })
+
+            ticketCardDataRef.current = { encryptedTicketData: response.data, ticketData: ticketData, id: response.id }
+
+            setShowTicketCard(true)
 
             addNewTicket(response.data);
 
@@ -155,9 +161,12 @@ const UnreservedTicket = () => {
     function resetFields() {
         sourceInputRef.current.value = null
         destinationInputRef.current.value = null;
+
         setTicket((oldValues) => {
             return {
                 ...oldValues,
+                source: "null",
+                destination: "null",
                 noOfPassenger: 1
             }
         })
@@ -168,7 +177,16 @@ const UnreservedTicket = () => {
 
     useEffect(() => {
         // setAllStations(ALL_STATIONS)
-        getAllStations();
+        console.log("Running UseEffect in UnreservedTicket.jsx")
+        if (allStations.length <= 0) {
+            getAllStations();
+            setHasFetched(true)
+        }
+
+        return () => {
+            console.log("Unmounting UnreservedTicket.jsx")
+        }
+
     }, []);
 
 
@@ -186,12 +204,12 @@ const UnreservedTicket = () => {
                     {/* Source Stations Dropdown */}
                     <div className="mb-3">
                         <label className="form-label fs-5" htmlFor="sourceInput">Source Station</label>
-                        <select ref={sourceInputRef} onChange={changeStation} name="source" className="form-select" defaultValue={null} id="sourceInput">
+                        <select ref={sourceInputRef} onChange={changeStation} value={ticket.source} name="source" className="form-select" id="sourceInput">
                             {
                                 (allStations.length <= 0) ?
-                                    <option disabled>No Station Found</option>
+                                    <option value="null" disabled>No Station Found</option>
                                     :
-                                    <option value={null} selected disabled>Select Station</option>
+                                    <option value="null" selected disabled>Select Station</option>
                             }
 
                             {
@@ -205,16 +223,16 @@ const UnreservedTicket = () => {
                     {/* Destination Stations Dropdown */}
                     <div className="mb-3">
                         <label className="form-label fs-5" htmlFor="destInput">Destination Station</label>
-                        <select ref={destinationInputRef} onChange={changeStation} name="destination" className="form-select" id="destInput">
+                        <select ref={destinationInputRef} value={ticket.destination} onChange={changeStation} name="destination" className="form-select" id="destInput">
                             {
                                 (allStations.length <= 0) ?
-                                    <option value={null} disabled>No Station Found</option>
+                                    <option value="null" disabled>No Station Found</option>
                                     :
-                                    <option value={null} selected disabled>Select Station</option>
+                                    <option value="null" selected disabled>Select Station</option>
                             }
 
                             {
-                                allStations.map((item, index) => {
+                                allStations.map((item) => {
                                     return <option key={item.code} value={item.code}>{item.name}</option>
                                 })
                             }
@@ -248,10 +266,11 @@ const UnreservedTicket = () => {
                 <hr />
 
                 {
-                    (ticket.encryptedTicketData) &&
+                    (ticketCardData.encryptedTicketData) &&
                     <NewRegularTicketCard
-                        ticketData={ticket.encryptedTicketData}
-                        key={ticket.encryptedTicketData}
+                        ticketData={ticketCardData.encryptedTicketData}
+                        id={ticketCardData.id}
+                        key={ticketCardData.id}
                     />
                 }
 
@@ -259,5 +278,6 @@ const UnreservedTicket = () => {
         </>
     )
 }
+
 
 export default UnreservedTicket

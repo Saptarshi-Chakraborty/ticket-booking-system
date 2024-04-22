@@ -3,12 +3,13 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import CONSTANTS from '../../../CONSTANTS'
 import AddStationModal from '../../components/Admin/AddStationModal'
 import Navbar from '../../components/Navbar/MasterNavbar'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import AllStationsTable from '../../components/Admin/AllStationsTable'
 
 const ManageStations = () => {
     // --- State Variables --- //
     const [stations, setStations] = useState([])
+    const [hasFetched, setHasFetched] = useState(false)
 
     const ref = useRef(false);
 
@@ -40,6 +41,15 @@ const ManageStations = () => {
             ref.current = true;
         }
     }
+
+    // --- Side Effects --- //
+    useEffect(() => {
+        if (!hasFetched) {
+            fetchAllStations();
+            setHasFetched(true);
+        }
+    }, [hasFetched])
+
 
     // --- JSX --- //
     return (

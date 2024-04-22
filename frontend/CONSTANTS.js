@@ -13,6 +13,9 @@ const CONSTANTS = {
         "createUser": "/create-user",
         "loginUser": "/login",
         "getUserTickets": "/my-tickets",
+        "adminApis": {
+            "getAllTickets": "/admin/all-tickets",
+        },
     },
     "UnreservedTicketFarePerKm": 0.5,
     "ReservedTicketFarePerKm": 1.5,

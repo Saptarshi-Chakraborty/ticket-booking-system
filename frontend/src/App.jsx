@@ -8,6 +8,7 @@ import ReservedTicket from "./pages/ReservedTicket"
 import ManageStations from "./pages/Admin/ManageStations"
 import AllTickets from "./pages/AllTickets"
 import Signup from "./pages/Signup"
+import ManageTickets from "./pages/Admin/ManageTickets"
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/reserved-ticket" element={<ReservedTicket />} />
         <Route path="/my-tickets" element={<AllTickets />} />
         <Route path="/admin/manage-stations" element={<ManageStations />} />
+        <Route path="/admin/manage-tickets" element={<ManageTickets />} />
 
         {/* Not Found Page */}
         <Route path="*" element={<NotFoundPage />} />

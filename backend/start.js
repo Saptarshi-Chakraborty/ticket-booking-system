@@ -11,6 +11,7 @@ import createUser from "./apis/createUser.js";
 import cookieParser from 'cookie-parser'; // import cookie parser
 import loginUser from './apis/login.js';
 import fetchAllTickets from './apis/getAllTickets.js';
+import getAllTickets_Admin from './apis/admin/getAllTickets.js';
 
 dotenv.config(); // Load .env file
 
@@ -26,6 +27,7 @@ app.use(cookieParser()); // use cookie parser
 app.get('/', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Content-Type", "application/json; charset=utf-8");
+    console.log(`Environment :`);
     res.json({ "Hello": "World!" })
 });
 
@@ -38,6 +40,7 @@ app.post('/regular-ticket', createRegularTicket);
 app.post('/reserved-ticket', createReservedTicket);
 app.post('/verify-ticket', verifyTicket);
 app.post('/my-tickets', fetchAllTickets);
+app.post("/admin/all-tickets", getAllTickets_Admin)
 
 // < ---- USERS ---->
 app.post('/create-user', createUser);
@@ -48,3 +51,13 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Backend app running at http://localhost:${port}`)
 })
+
+function getEnvirnoment() {
+    if (app.get('env') === 'development') {
+        return 'development';
+    } else {
+        return 'production';
+    }
+}
+
+export default getEnvirnoment;

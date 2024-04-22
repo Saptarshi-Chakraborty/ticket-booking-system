@@ -7,6 +7,7 @@ import RegularTicketAccordionItem from './TicketAccordionItem';
 import CONSTANTS from '../../CONSTANTS';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ReservedTicketAccordionItem from '../components/ReservedTicketAccordionItem';
 
 const AllTickets = () => {
   const [unreservedTickets, setUnreservedTickets] = useState([])
@@ -110,7 +111,7 @@ const AllTickets = () => {
 
         <section>
           <h3 className='mt-3'>Reserved Tickets :</h3>
-          <div className="accordion" id="accordionExample">
+          <div className="accordion" id="reservedTicketAccordion">
             {
               reservedTickets.length === 0 &&
               <div className="alert alert-warning" role="alert">
@@ -120,7 +121,7 @@ const AllTickets = () => {
             {
               (reservedTickets.length !== 0) &&
               reservedTickets.map((item, index) => {
-                return <RegularTicketAccordionItem key={index} ticket={item} index={index} />
+                return <ReservedTicketAccordionItem key={index} ticket={item} index={index} />
               })
             }
           </div>

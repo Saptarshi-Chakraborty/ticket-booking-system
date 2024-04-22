@@ -3,9 +3,12 @@ import '../styles/RegularTicket.css'
 import { decodeJwtData } from '../utils/jwtAuth'
 import { createQrCode } from '../utils/qrCode';
 
-const NewRegularTicketCard = ({ ticketData }) => {
+const NewRegularTicketCard = ({ ticketData, id }) => {
     const [qrCodeUrl, setQrCodeUrl] = useState('')
     const ticket = decodeJwtData(ticketData);
+
+    console.log(`Ticket Card Data:`);
+    console.log(id);
     console.log(ticket);
 
     const dateTime = new Date(ticket.exp * 1000);
@@ -63,7 +66,7 @@ const NewRegularTicketCard = ({ ticketData }) => {
             <div className="receipts-wrapper">
                 <div className="receipts">
                     <div className="receipt">
-                        <span className='text-ticket'>#{ticket.id}</span>
+                        <span className='text-ticket'>#{id}</span>
                         <div className='brand-logo'>
                             <img src="/images/icon-192.png" alt="" />
                             <span>TBS</span>
@@ -89,7 +92,7 @@ const NewRegularTicketCard = ({ ticketData }) => {
                             </div>
                             <div className="item">
                                 <span>Price</span>
-                                <h3>{parseInt(ticket.fare) * 5} Rs.</h3>
+                                <h3>{ticket.fare} Rs.</h3>
                             </div>
                             <div className="item">
                                 <span>Valid Till</span>

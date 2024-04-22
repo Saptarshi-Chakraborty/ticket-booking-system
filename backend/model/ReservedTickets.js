@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 const { Schema, } = mongoose;
 
-const regularTicketSchema = new Schema({
+const reservedTicketSchema = new Schema({
     userId: { type: String, required: true },
     sourceStation: { type: Object, required: true },
     destinationStation: { type: Object, required: true },
     numberOfPassengers: { type: Number, required: true },
+    passengers: { type: Array, required: true },
     distance: { type: Number, required: false },
     fare: { type: Number, required: false },
     isPaid: { type: Boolean, default: false },
@@ -14,6 +15,6 @@ const regularTicketSchema = new Schema({
     expiresAt: { type: Date, default: Date.now },
 });
 
-const RegularTicket = mongoose.model('regularTicket ', regularTicketSchema);
+const ReservedTicket = mongoose.model('reservedTicket ', reservedTicketSchema);
 
-export default RegularTicket;
+export default ReservedTicket;

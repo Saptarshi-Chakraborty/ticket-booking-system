@@ -50,6 +50,7 @@ const AdminNavbar = ({ isLoggedin, loginDetails, logoutUser }) => {
                                 </a>
                                 <ul className="dropdown-menu">
                                     <li><Link className="dropdown-item" to="/admin/manage-stations">Stations</Link></li>
+                                    <li><Link className="dropdown-item" to="/admin/manage-tickets">Tickets</Link></li>
                                     <li><hr className="dropdown-divider" /></li>
                                     <li><a className="dropdown-item" href="#">Something else here</a></li>
                                 </ul>

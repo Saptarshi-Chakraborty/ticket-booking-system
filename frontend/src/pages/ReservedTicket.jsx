@@ -6,21 +6,26 @@ import CONSTANTS from '../../CONSTANTS';
 import PassengerDetailsBox from '../components/ReservedTicket/PassengerDetailsBox';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css';
-import { addNewTicket } from '../utils/localstorage';
+import { addNewTicket, getAuthToken } from '../utils/localstorage';
 import ReservedTicketCard from '../components/ReservedTicket/ReservedTicketCard';
+import { isLoggedIn } from '../utils/authentication';
+import { useNavigate } from 'react-router-dom';
+import calculateDistance from '../utils/distanceCalculator';
 
 const ReservedTicket = () => {
+
+    // ---- State Variables ---- //
     const [ticketDetails, setTicketDetails] = useState({ ticketId: null, destination: null, source: null, ticketData: null, encryptedTicketData: null, noOfPassenger: 1 });
+    const [allStations, setAllStations] = useState([]);
+    const [ticket, setTicket] = useState({ source: null, destination: null, ticketData: null, encryptedTicketData: null, noOfPassenger: 1 })
 
 
     // ---- Refs ---- //
     const destinationInputRef = useRef(null);
 
 
-    // ----- State Variables ----- //
-    const [allStations, setAllStations] = useState([]);
-    const [ticket, setTicket] = useState({ source: null, destination: null, ticketData: null, encryptedTicketData: null, noOfPassenger: 1 })
-
+    // ---- Variables ---- //
+    const navigate = useNavigate();
 
 
 
@@ -77,6 +82,15 @@ const ReservedTicket = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (isLoggedIn() == false) {
+            toast.error("Please login to book ticket")
+            setTimeout(() => {
+                navigate("/login");
+            }, 3000);
+            return;
+        }
+
         console.log(ticket)
 
         if (ticket.source == null || ticket.destination == null) {
@@ -87,6 +101,11 @@ const ReservedTicket = () => {
         const sourceStation = allStations.filter((item) => (item.code == ticket.source))[0];
         const destinationStation = allStations.filter((item) => (item.code == ticket.destination))[0];
         console.log(sourceStation, destinationStation);
+
+
+        let distance = calculateDistance(sourceStation.lat, sourceStation.long, destinationStation.lat, destinationStation.long)
+        distance = distance.toFixed(2); // upto 2 decimal places
+        const fare = Math.round(distance * CONSTANTS.UnreservedTicketFarePerKm * ticket.noOfPassenger);
 
         const allPassenger = getAllPassengerDetails();
 
@@ -99,9 +118,10 @@ const ReservedTicket = () => {
             destinationStationName: destinationStation.name,
             destinationStationCode: destinationStation.code,
             numberOfPassenger: ticket.noOfPassenger,
-            userId: null,
             passengers: allPassenger,
-            type: "Reserved"
+            distance,
+            fare,
+            AUTH_TOKEN: getAuthToken(),
         }
 
         const params = {

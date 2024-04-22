@@ -1,7 +1,10 @@
 import React, { createRef, useRef } from 'react'
 import { downloadTicket, shareTicket } from '../utils/ticketData';
 
-const RegularTicketAccordionItem = ({ ticket, index }) => {
+const fullGender = { "m": "Male", "f": "Female", "o": "Others" };
+const fullBerth = { "lb": "Lower Berth", "mb": "Middle Berth", "ub": "Upper Berth", "sl": "Side Lower Berth", "su": "Side Upper Berth" }
+
+const ReservedTicketAccordionItem = ({ ticket, index }) => {
     console.log(ticket);
 
     let issueTime = "";
@@ -17,20 +20,31 @@ const RegularTicketAccordionItem = ({ ticket, index }) => {
     return (
         <div className="accordion-item">
             <div className="accordion-header">
-                <button className="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#urTicketCard${index}`} aria-expanded="true" aria-controls={`urTicketCard${index}`}>
+                <button className="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#rTicketCard${index}`} aria-expanded="true" aria-controls={`rTicketCard${index}`}>
                     {ticket?.sourceStation.name} ({ticket?.sourceStation.code}) - {ticket?.destinationStation.name} ({ticket?.destinationStation.code})
                 </button>
 
                 <small>Booked on : {issueTime}</small>
             </div>
 
-            <div id={`urTicketCard${index}`} className="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div id={`rTicketCard${index}`} className="accordion-collapse collapse" data-bs-parent="#reservedTicketAccordion">
                 <div className="accordion-body py-2">
                     <p className='my-0'>Id : <strong>{ticket?._id}</strong></p>
                     <p className='my-0'>From : <strong>{ticket?.sourceStation.name} ({ticket?.sourceStation.code})</strong></p>
                     <p className='my-0'>To :  <strong>{ticket?.destinationStation.name} ({ticket?.destinationStation.code})</strong></p>
-                    <p className='my-0'>Passenger : <strong>{ticket?.numberOfPassengers} </strong></p>
-                    <p className='my-0'>Fare : <strong>{ticket?.amount} Rs.</strong></p>
+                    <p className='my-0'>Passengers :</p>
+                    <div>
+                        {
+                            ticket.passengers.map((item, index) => {
+                                return (<p className='m-0'>
+                                    <b>{index + 1}.</b>&nbsp;
+                                    {item.name} ({item.gender}, {item.age} yr)
+                                    &nbsp;- {fullBerth[item.berth]}
+                                </p>)
+                            })
+                        }
+                    </div>
+                    <p className='my-0 mt-1'>Fare : <strong>{ticket?.fare} Rs.</strong></p>
                     <p className='my-0'>Valid Till : <strong>{expiryDate}</strong></p>
 
                     <div className="optionsBox d-flex flex-row w-100 align-items-center justify-content-evenly py-2">
@@ -58,4 +72,4 @@ const RegularTicketAccordionItem = ({ ticket, index }) => {
     )
 }
 
-export default RegularTicketAccordionItem
+export default ReservedTicketAccordionItem
