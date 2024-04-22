@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import TicketAnalytics from '../../components/Admin/Tickets/TicketAnalytics'
 import CONSTANTS from '../../../CONSTANTS.js'
 import { getAuthToken } from '../../utils/localstorage.js'
+import TicketsLineChart from '../../components/Admin/Tickets/TicketChart.jsx'
 
 const ManageTickets = () => {
 
@@ -68,6 +69,8 @@ const ManageTickets = () => {
         <main className="container my-3">
             <button onClick={fetchTickets} className="btn btn-primary">Fetch Tickets</button>
             <TicketAnalytics reservedTickets={reservedTickets} unreservedTickets={unreservedTickets} />
+{/* 
+            <TicketsLineChart reservedTickets={reservedTickets} unreservedTickets={unreservedTickets} /> */}
 
         </main>
 
