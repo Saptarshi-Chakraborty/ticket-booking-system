@@ -11,6 +11,7 @@ const ManageTickets = () => {
     // --- State Variables --- //
     const [reservedTickets, setReservedTickets] = useState([])
     const [unreservedTickets, setUnreservedTickets] = useState([])
+    const [allUsers, setAllUsers] = useState([{}])
     const [hasFetched, setHasFetched] = useState(false)
 
     // --- Custom Functions --- //
@@ -37,6 +38,7 @@ const ManageTickets = () => {
             // Do something with the data
             setReservedTickets(data.reservedTickets.reverse())
             setUnreservedTickets(data.unreservedTickets.reverse())
+            setAllUsers(data.allUsers)
 
         } catch (err) {
             console.error(err);
@@ -78,14 +80,14 @@ const ManageTickets = () => {
 
                 {
                     (unreservedTickets.length > 0) &&
-                    <UnreservedTicketsTable unreservedTickets={unreservedTickets} />
+                    <UnreservedTicketsTable unreservedTickets={unreservedTickets} allUsers={allUsers} />
                 }
 
                 <hr />
 
                 {
                     (reservedTickets.length > 0) &&
-                    <ReservedTicketsTable reservedTickets={reservedTickets} />
+                    <ReservedTicketsTable reservedTickets={reservedTickets} allUsers={allUsers} />
                 }
 
 

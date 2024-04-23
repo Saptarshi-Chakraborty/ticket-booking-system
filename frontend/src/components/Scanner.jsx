@@ -36,11 +36,11 @@ const Scanner = ({ qrData, setQrData }) => {
     async function getVideoPermission() {
         const constraints = {
             video: {
-                facingMode: ["environment", "user"]
+                facingMode: "environment"
             },
             audio: false
         };
-        
+
         navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
             console.log("Got camera permissions");
 

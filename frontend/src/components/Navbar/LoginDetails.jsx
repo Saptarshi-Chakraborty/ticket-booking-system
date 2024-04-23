@@ -14,8 +14,8 @@ const LoginDetails = ({ loginDetails, logoutUser }) => {
             <button className="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 My Account
             </button>
-            <ul className="dropdown-menu">
-                <li><span className="dropdown-item fs-5 fw-bold">{loginDetails?.name}</span></li>
+            <ul className="dropdown-menu cursor-pointer" title={`User Id: ${loginDetails.id}`}>
+                <li  ><span className="dropdown-item fs-5 fw-bold">{loginDetails?.name}</span></li>
 
                 <li><span className="dropdown-item text-muted">{loginDetails?.email}</span></li>
 
