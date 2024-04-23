@@ -8,42 +8,42 @@ const Home = () => {
             <Navbar />
 
             <main>
-                <div class="jumbotron">
-                    <h1 class="display-4">Book Your Train Tickets with Ease</h1>
-                    <p class="lead">Experience hassle-free train ticket booking at your fingertips.</p>
-                    <Link class="btn btn-warning rounded-0 btn-lg" to="/signup" role="button">Get Started</Link>
+                <div className="jumbotron">
+                    <h1 className="display-4">Book Your Train Tickets with Ease</h1>
+                    <p className="lead">Experience hassle-free train ticket booking at your fingertips.</p>
+                    <Link className="btn btn-warning rounded-0 btn-lg" to="/signup" role="button">Get Started</Link>
                 </div>
 
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="feature-box">
-                                <div class="feature-icon">
-                                    <i class="fas fa-train"></i>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-4">
+                            <div className="feature-box">
+                                <div className="feature-icon">
+                                    <i className="fas fa-train"></i>
                                 </div>
-                                <h2 class="feature-title">Search Trains</h2>
-                                <p class="feature-description">Find trains for your journey based on your preferences.</p>
-                                <Link class="btn btn-primary rounded-0" to="/signup" role="button">Search Trains</Link>
+                                <h2 className="feature-title">Search Trains</h2>
+                                <p className="feature-description">Find trains for your journey based on your preferences.</p>
+                                <Link className="btn btn-primary rounded-0" to="/signup" role="button">Search Trains</Link>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="feature-box">
-                                <div class="feature-icon">
-                                    <i class="fas fa-ticket-alt"></i>
+                        <div className="col-md-4">
+                            <div className="feature-box">
+                                <div className="feature-icon">
+                                    <i className="fas fa-ticket-alt"></i>
                                 </div>
-                                <h2 class="feature-title">Book Tickets</h2>
-                                <p class="feature-description">Book tickets quickly and securely for your preferred train.</p>
-                                <a class="btn btn-primary rounded-0" href="booking.html" role="button">Book Tickets</a>
+                                <h2 className="feature-title">Book Tickets</h2>
+                                <p className="feature-description">Book tickets quickly and securely for your preferred train.</p>
+                                <a className="btn btn-primary rounded-0" href="booking.html" role="button">Book Tickets</a>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="feature-box">
-                                <div class="feature-icon">
-                                    <i class="fas fa-calendar-alt"></i>
+                        <div className="col-md-4">
+                            <div className="feature-box">
+                                <div className="feature-icon">
+                                    <i className="fas fa-calendar-alt"></i>
                                 </div>
-                                <h2 class="feature-title">Manage Bookings</h2>
-                                <p class="feature-description">View and manage your booked tickets with ease.</p>
-                                <a class="btn btn-primary rounded-0" href="bookings.html" role="button">Manage Bookings</a>
+                                <h2 className="feature-title">Manage Bookings</h2>
+                                <p className="feature-description">View and manage your booked tickets with ease.</p>
+                                <a className="btn btn-primary rounded-0" href="bookings.html" role="button">Manage Bookings</a>
                             </div>
                         </div>
                     </div>

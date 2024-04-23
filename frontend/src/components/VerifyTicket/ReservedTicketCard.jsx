@@ -23,15 +23,15 @@ const ReserveTicketCard = ({ decodeResult }) => {
             <div className='card-body'>
                 <p>From : {decodeResult?.data.sourceStationName} ({decodeResult.data.sourceStationCode})</p>
                 <p>To : {decodeResult?.data.destinationStationName} ({decodeResult.data.destinationStationCode})</p>
-                <p>Number of Passengers : {decodeResult?.data.numberOfPassenger}</p>
-                <p>Booking Time : {bookingTime.toLocaleDateString()} {bookingTime.toLocaleTimeString()}</p>
+                <p>Fare : {decodeResult?.data.fare} Rs.</p>
 
                 {
                     decodeResult?.data.passengers.map((item, index) => (
-                        <p className="fw-bold" key={index}>Passenger {index + 1} : {item.name} ({item.age}, {fullGender[item.gender]}) - {fullBerthName[item.berth]}</p>
+                        <p className="fw-semibold" key={index}>Passenger {index + 1} : {item.name} ({item.age}, {fullGender[item.gender]}) - {fullBerthName[item.berth]}</p>
                     ))
                 }
 
+                <p>Booking Time : {bookingTime.toLocaleDateString()} {bookingTime.toLocaleTimeString()}</p>
                 <p>Valid Till : {expiryTime}</p>
                 <p className='fw-bold'>{decodeResult?.data.type} Ticket</p>
             </div>

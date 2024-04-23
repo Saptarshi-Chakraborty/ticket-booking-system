@@ -23,7 +23,7 @@ const UnreservedTicketCard = ({ decodeResult }) => {
                 <p>From : {decodeResult?.data.sourceStationName} ({decodeResult.data.sourceStationCode})</p>
                 <p>To : {decodeResult?.data.destinationStationName} ({decodeResult.data.destinationStationCode})</p>
                 <p>Number of Passengers : {decodeResult?.data.numberOfPassenger}</p>
-                <p>Fare : {decodeResult?.data.fare}</p>
+                <p>Fare : {decodeResult?.data.fare} Rs.</p>
                 <p>Valid Till : {date}</p>
                 <p className='fw-bold'>{decodeResult?.data.type} Ticket</p>
             </div>

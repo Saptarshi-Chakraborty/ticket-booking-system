@@ -40,9 +40,7 @@ const Scanner = ({ qrData, setQrData }) => {
             },
             audio: false
         };
-
-        toast.info("Requesting camera permissions")
-
+        
         navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
             console.log("Got camera permissions");
 
