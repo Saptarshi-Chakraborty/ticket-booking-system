@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Content-Type", "application/json; charset=utf-8");
     console.log(`Environment :`);
-    res.json({ "Hello": "World!" })
+    res.json({ "Hello": "World!", "env": getEnvirnoment() })
 });
 
 // <---- STATIONS ---->

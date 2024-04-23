@@ -156,7 +156,7 @@ const Scanner = ({ qrData, setQrData }) => {
                     stopCameraFunction={stopCamera}
                 />
 
-                <p className="text-wrap" ref={outputBoxRef} id="outputBox"></p>
+                <p className="text-wrap d-none" ref={outputBoxRef} id="outputBox"></p>
             </div>
 
         </div>
