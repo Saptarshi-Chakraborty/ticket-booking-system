@@ -35,8 +35,8 @@ const ManageTickets = () => {
             }
 
             // Do something with the data
-            setReservedTickets(data.reservedTickets)
-            setUnreservedTickets(data.unreservedTickets)
+            setReservedTickets(data.reservedTickets.reverse())
+            setUnreservedTickets(data.unreservedTickets.reverse())
 
         } catch (err) {
             console.error(err);

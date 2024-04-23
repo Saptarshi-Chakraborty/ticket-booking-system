@@ -32,7 +32,7 @@ async function createReservedTicket(req, res) {
 
     const secret = process.env.TICKET_ENCRYPTION_SECRET;
     // create a new ticket with jwt token
-    const token = jwt.sign({ sourceStationName, sourceStationCode, destinationStationName, destinationStationCode, numberOfPassenger, userId, passengers, distance, fare, type: "Reserved" }, secret, { expiresIn: '24h' });
+    const token = jwt.sign({ sourceStationName, sourceStationCode, destinationStationName, destinationStationCode, numberOfPassenger, userId, passengers, distance, fare, type: "Reserved" }, secret, { expiresIn: '2d' });
 
     // connect with database
     const connection = await mongoose.connect(GLOBALS.mongoURI);
@@ -42,7 +42,7 @@ async function createReservedTicket(req, res) {
         res.status(500).json({ "status": "error", "msg": "Internal Server Error" });
     }
 
-    const newTicket = new ReservedTicket({ userId, sourceStation: { name: sourceStationName, code: sourceStationCode }, destinationStation: { name: destinationStationName, code: destinationStationCode }, numberOfPassengers: numberOfPassenger, passengers, distance, fare, ticketData: token });
+    const newTicket = new ReservedTicket({ userId, sourceStation: { name: sourceStationName, code: sourceStationCode }, destinationStation: { name: destinationStationName, code: destinationStationCode }, numberOfPassengers: numberOfPassenger, passengers, distance, fare, ticketData: token, expiresAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) });
 
     const result = await newTicket.save();
 

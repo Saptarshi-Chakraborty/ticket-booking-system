@@ -49,8 +49,25 @@ const AllTickets = () => {
 
       // If success
       if (data.status === "success") {
-        setUnreservedTickets(data.unreservedTickets.reverse());
-        setReservedTickets(data.reservedTickets.reverse());
+
+        // filter out expired tickets
+        let currentDate = new Date();
+        let unreservedTickets = data.unreservedTickets.filter((item) => {
+          let expiryDate = new Date(item.expiresAt);
+          return expiryDate >= currentDate;
+        });
+
+        setUnreservedTickets(unreservedTickets.reverse());
+
+        // set reserved tickets
+        currentDate = new Date();
+        let reservedTickets = data.reservedTickets.filter((item) => {
+          let expiryDate = new Date(item.expiresAt);
+          return expiryDate >= currentDate;
+        });
+
+        setReservedTickets(reservedTickets.reverse());
+
       }
 
 
@@ -72,6 +89,7 @@ const AllTickets = () => {
 
     return () => {
       console.log("Unmounting AllTickets.jsx");
+      setReservedTickets([]);
       setUnreservedTickets([]);
     }
   }, [])

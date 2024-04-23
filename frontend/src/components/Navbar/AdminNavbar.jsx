@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getLoginDetails, isLoggedIn } from '../../utils/authentication.js'
 import { removeAuthToken } from '../../utils/localstorage.js';
+import LoginDetails from './LoginDetails.jsx';
 
 const AdminNavbar = ({ isLoggedin, loginDetails, logoutUser }) => {
 
     return (
-        <nav className="navbar navbar-expand-lg bg-body-white">
+        <nav className="navbar navbar-expand-lg bg-body-white me-md-5">
             <div className="container-fluid px-lg-5">
                 <Link className="navbar-brand d-flex align-items-center gap-2 p-0 fs-4 " to="/">
                     <img src="/images/icon-192.png" alt="Logo" width="30" height="24" className="d-inline-block align-text-top img-fluid" />
@@ -29,33 +30,35 @@ const AdminNavbar = ({ isLoggedin, loginDetails, logoutUser }) => {
                             </li>
 
                             <li className="nav-item">
-                                <Link className="nav-link active" aria-current="page" to="/scan-qr">Scan QR</Link>
+                                <Link className="nav-link active" aria-current="page" to="/admin/manage-stations">Manage Stations</Link>
                             </li>
 
                             <li className="nav-item">
-                                <Link className="nav-link active" aria-current="page" to="/my-tickets">My Tickets</Link>
+                                <Link className="nav-link active" aria-current="page" to="/admin/manage-tickets">All Tickets</Link>
                             </li>
 
                             <li className="nav-item">
-                                <Link className="nav-link active" aria-current="page" to="/unreserved-ticket">Unreserved Ticket</Link>
-                            </li>
-
-                            <li className="nav-item">
-                                <Link className="nav-link active" aria-current="page" to="/reserved-ticket">Reserved Ticket</Link>
+                                <Link className="nav-link active" aria-current="page" to="/admin/tickets-analytics">Tickets Analytics</Link>
                             </li>
 
                             <li className="nav-item dropdown">
                                 <a className="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Admin
+                                    Basic Features
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li><Link className="dropdown-item" to="/admin/manage-stations">Stations</Link></li>
-                                    <li><Link className="dropdown-item" to="/admin/manage-tickets">Manage Tickets</Link></li>
-                                    <li><Link className="dropdown-item" to="/admin/tickets-analytics">Tickets Analytics</Link></li>
-                                    <li><hr className="dropdown-divider" /></li>
-                                    <li><a className="dropdown-item" href="#">Something else here</a></li>
+                                    <li><Link className="dropdown-item" to="/scan-qr">Scan QR</Link></li>
+
+                                    <li><Link className="dropdown-item" to="/my-tickets">My Tickets</Link></li>
+
+                                    <li><Link className="dropdown-item" to="/unreserved-ticket">Unreserved Ticket</Link></li>
+
+                                    <li><Link className="dropdown-item" to="/reserved-ticket">Reserved Ticket</Link></li>
                                 </ul>
                             </li>
+
+
+
+
 
                             {
                                 console.log(getLoginDetails())
@@ -64,9 +67,7 @@ const AdminNavbar = ({ isLoggedin, loginDetails, logoutUser }) => {
                             {/* Accounts Section in Menu */}
                             {
                                 (isLoggedin) ?
-                                    <li className="nav-item">
-                                        <button onClick={logoutUser} className=" btn btn-danger" to="/register">Log out</button>
-                                    </li>
+                                    <LoginDetails loginDetails={loginDetails} logoutUser={logoutUser} />
                                     :
                                     <li className="nav-item">
                                         <Link className=" btn btn-primary" to="/login">Login</Link>

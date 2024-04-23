@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 const UnreservedTicket = () => {
 
     // ---- State Variables ---- //
-    const [ticket, setTicket] = useState({ source: "null", destination: "null", ticketData: null, encryptedTicketData: null, noOfPassenger: 1 })
+    const [ticket, setTicket] = useState({ source: "null", destination: "null", ticketData: null, encryptedTicketData: null, noOfPassenger: 1, distance: 0, farePerPassenger: 0 })
     const [ticketCardData, setTicketCardData] = useState({ encryptedTicketData: null, ticketData: null, id: null })
     const [allStations, setAllStations] = useState([])
     const [hasFetched, setHasFetched] = useState(false)
@@ -63,7 +63,6 @@ const UnreservedTicket = () => {
         if ((name == "source" || name == "destination") && value == "null") {
             setTicketCardData({ encryptedTicketData: null, ticketData: null, id: null })
         }
-
     }
 
     function changePassenger(changeBy) {

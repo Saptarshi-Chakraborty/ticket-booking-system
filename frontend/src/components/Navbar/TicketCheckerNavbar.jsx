@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getLoginDetails, isLoggedIn } from '../../utils/authentication.js'
 import { removeAuthToken } from '../../utils/localstorage.js';
+import LoginDetails from './LoginDetails.jsx';
 
 const TicketChekerNavbar = ({ isLoggedin, loginDetails, logoutUser }) => {
 
     return (
-        <nav className="navbar navbar-expand-lg bg-body-white">
+        <nav className="navbar navbar-expand-lg bg-body-white me-md-5">
             <div className="container-fluid px-lg-5">
                 <Link className="navbar-brand d-flex align-items-center gap-2 p-0 fs-4 " to="/">
                     <img src="/images/icon-192.png" alt="Logo" width="30" height="24" className="d-inline-block align-text-top img-fluid" />
@@ -41,9 +42,7 @@ const TicketChekerNavbar = ({ isLoggedin, loginDetails, logoutUser }) => {
                             {/* Accounts Section in Menu */}
                             {
                                 (isLoggedin) ?
-                                    <li className="nav-item">
-                                        <button onClick={logoutUser} className=" btn btn-danger" to="/register">Log out</button>
-                                    </li>
+                                    <LoginDetails loginDetails={loginDetails} logoutUser={logoutUser} />
                                     :
                                     <li className="nav-item">
                                         <Link className=" btn btn-primary" to="/login">Login</Link>
