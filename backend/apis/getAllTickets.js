@@ -24,7 +24,8 @@ async function fetchAllTickets(req, res) {
     });
     console.log(decodedData);
 
-    const connection = await mongoose.connect(GLOBALS.mongoURI);
+    // const connection = await mongoose.connect(GLOBALS.mongoURI);
+    const connection = await mongoose.connect(process.env.MONGODB_URI);
 
     if (!connection) {
         console.log("MongoDB connection failed");

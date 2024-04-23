@@ -35,7 +35,8 @@ async function createReservedTicket(req, res) {
     const token = jwt.sign({ sourceStationName, sourceStationCode, destinationStationName, destinationStationCode, numberOfPassenger, userId, passengers, distance, fare, type: "Reserved" }, secret, { expiresIn: '2d' });
 
     // connect with database
-    const connection = await mongoose.connect(GLOBALS.mongoURI);
+    // const connection = await mongoose.connect(GLOBALS.mongoURI);
+    const connection = await mongoose.connect(process.env.MONGODB_URI);
 
     if (!connection) {
         console.log("MongoDB connection failed");

@@ -5,7 +5,8 @@ import GLOBALS from '../CONSTANTS.js';
 async function getAllStations(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
 
-    const connection = await mongoose.connect(GLOBALS.mongoURI);
+    // const connection = await mongoose.connect(GLOBALS.mongoURI);
+    const connection = await mongoose.connect(process.env.MONGODB_URI);
 
     if (!connection) {
         console.log("MongoDB connection failed");

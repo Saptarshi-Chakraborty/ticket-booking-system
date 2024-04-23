@@ -1,6 +1,7 @@
 import Station from '../model/stations.js';
 import mongoose from 'mongoose';
 import GLOBALS from '../CONSTANTS.js';
+import getEnvirnoment from '../start.js';
 
 async function addNewStation(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -27,7 +28,8 @@ async function addNewStation(req, res) {
 
     console.log(`Name: ${name}, Code: ${code} Lat: ${lat}, Long: ${long}`);
 
-    const connection = await mongoose.connect(GLOBALS.mongoURI);
+    // const connection = await mongoose.connect(GLOBALS.mongoURI);
+    const connection = await mongoose.connect(process.env.MONGODB_URI);
 
     if (!connection) {
         console.log("MongoDB connection failed");
